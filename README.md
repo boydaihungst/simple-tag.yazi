@@ -130,7 +130,7 @@ require("simple-tag"):setup({
   -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-plugin/preset/components/linemode.lua#L4-L5
   linemode_order = 500, -- (Optional)
 
-  -- You can backup/restore this folder within the same OS (Linux, windows, or MacOS). 
+  -- You can backup/restore this folder within the same OS (Linux, windows, or MacOS).
   -- But you can't restore backed up folder in the different OS because they use difference absolute path.
   -- save_path =  -- full path to save tags folder (Optional)
   --       - Linux/MacOS: os.getenv("HOME") .. "/.config/yazi/tags"
@@ -173,6 +173,10 @@ require("simple-tag"):setup({
 ### Fetcher Configuration in `yazi.toml`
 
 Use one of the following methods:
+
+> [!IMPORTANT]
+>
+> For yazi nightly replace `name` with `url`
 
 ```toml
 [plugin]
