@@ -51,7 +51,7 @@ ya pkg add boydaihungst/simple-tag
 > [!IMPORTANT]
 > Tags are automatically cleared when files/folders are deleted or moved to trash within Yazi.
 > However, if deleted outside Yazi and then recreated, their tags will be restored.
-> It also apply with renaming files/folders.
+> It also apply with renaming and moving files/folders.
 
 ## Previews
 
@@ -73,6 +73,7 @@ ya pkg add boydaihungst/simple-tag
   ![Recording 2025-03-29 at 21 30 13](https://github.com/user-attachments/assets/2c5bef3b-cb9f-49ca-976f-fb5bad5bc323)
 
 - Filter Files by Tag(s) and Modes:
+  In all of examples below, I didn't use fixed tag keys with `--keys`/`--key`/`--tag`/`--tags`
 
   - Mode = and (Default), match all of the selected tags:
 
@@ -83,7 +84,7 @@ ya pkg add boydaihungst/simple-tag
     ![Recording 2025-03-29 at 21 01 39](https://github.com/user-attachments/assets/cf9e757f-d910-4dca-aec5-cf9c36e54f34)
 
 - Visual Selection Modes:
-  Those examples below, I didn't use fixed `--keys`/`--key`/`--tag`/`--tags`
+  In all of examples below, I didn't use fixed tag keys with `--keys`/`--key`/`--tag`/`--tags`
 
   ![image](https://github.com/user-attachments/assets/6efabb8a-0022-4aa3-ba20-04127e3c58c1)
 
@@ -105,7 +106,7 @@ ya pkg add boydaihungst/simple-tag
 
   - Exclude selection:
 
-    ![Recording 2025-03-29 at 23 27 41](https://github.com/user-attachments/assets/7fa93311-1cdb-4346-bae1-a3f97bf74043)
+    ![Recording 2025-08-06 at 16 31 31](https://github.com/user-attachments/assets/c8124b16-803d-48a4-9d44-e345060629d6)
 
   - Undo selection:
 
@@ -129,7 +130,8 @@ require("simple-tag"):setup({
   -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-plugin/preset/components/linemode.lua#L4-L5
   linemode_order = 500, -- (Optional)
 
-  -- You can backup/restore this folder. But don't use backed up folder in the different OS.
+  -- You can backup/restore this folder within the same OS (Linux, windows, or MacOS). 
+  -- But you can't restore backed up folder in the different OS because they use difference absolute path.
   -- save_path =  -- full path to save tags folder (Optional)
   --       - Linux/MacOS: os.getenv("HOME") .. "/.config/yazi/tags"
   --       - Windows: os.getenv("APPDATA") .. "\\yazi\\config\\tags"
@@ -151,8 +153,8 @@ require("simple-tag"):setup({
   },
 
   -- Set tag icons. Only show when ui_mode = "icon".
-  -- Any text or nerdfont icons should work
-  -- Default icon from mactag.yazi: ●; , , 󱈤
+  -- Any text or nerdfont icons should work as long as you use nerdfont to render yazi.
+  -- Default icon from mactag.yazi: ●; Some generic icons: , , 󱈤
   -- More icon from nerd fonts: https://www.nerdfonts.com/cheat-sheet
   icons = { -- (Optional)
     -- default icon
@@ -190,6 +192,11 @@ Use one of the following methods:
     { id = "simple-tag", name = "*/", run = "simple-tag" },
   ]
 
+# For yazi nightly, name is replaced with url
+  append_fetchers = [
+    { id = "simple-tag", url = "*", run = "simple-tag" },
+    { id = "simple-tag", url = "*/", run = "simple-tag" },
+  ]
 ```
 
 ### Keybindings in `keymap.toml`
