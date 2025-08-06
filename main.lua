@@ -1037,6 +1037,9 @@ function M:entry(job)
 
 		-- clear selection
 		ya.emit("escape", { select = true })
+		if #new_selected_files == 0 then
+			return
+		end
 		local valid_selected_files = {}
 		for _, url_raw in ipairs(new_selected_files) do
 			local url = Url(url_raw)
