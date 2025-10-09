@@ -3,10 +3,11 @@
 local PackageName = "simple-tag"
 local M = {}
 
-
 --          ╭─────────────────────────────────────────────────────────╮
 --          │                          ENUM                           │
 --          ╰─────────────────────────────────────────────────────────╯
+
+local TARGET_FAMILY = ya.target_family()
 
 -- stylua: ignore
 local CAND_TAG_KEYS = {
@@ -98,7 +99,7 @@ local TAG_ACTION = {
 
 	filter = "filter",
 	files_deleted = "files-deleted",
-	files_transfered = "files-transfered",
+	files_transferred = "files-transferred",
 }
 
 local UI_MODE_ORDERED = {
@@ -394,7 +395,8 @@ end)
 ---@return table<{[string]:string[]}
 local function read_tags_tbl(tags_tbl)
 	local save_path = get_state(STATE_KEY.save_path)
-	local tbl_saved_file = pathJoin(save_path, tags_tbl, "tags.json")
+	local tbl = TARGET_FAMILY == "windows" and tags_tbl:gsub(":", "") or tags_tbl
+	local tbl_saved_file = pathJoin(save_path, tbl, "tags.json")
 
 	local file = io.open(tbl_saved_file, "r")
 	if file == nil then
@@ -416,7 +418,8 @@ local function write_tags_db()
 
 	local save_path = get_state(STATE_KEY.save_path)
 	for tags_tbl, tags_tbl_records in pairs(changed_tags_db) do
-		local tags_tbl_save_dir = pathJoin(save_path, tags_tbl)
+		local tbl = TARGET_FAMILY == "windows" and tags_tbl:gsub(":", "") or tags_tbl
+		local tags_tbl_save_dir = pathJoin(save_path, tbl)
 		for fname, tags in pairs(tags_tbl_records) do
 			if #tags == 0 then
 				changed_tags_db[tags_tbl][fname] = nil
@@ -520,7 +523,7 @@ end
 function M:setup(opts)
 	local st = self
 	local save_path = pathJoin(
-		(ya.target_family() == "windows" and os.getenv("APPDATA") .. "\\yazi\\config\\tags")
+		(TARGET_FAMILY == "windows" and os.getenv("APPDATA") .. "\\yazi\\config\\tags")
 			or (os.getenv("HOME") .. "/.config/yazi/tags")
 	)
 	st[STATE_KEY.tasks_write_tags_db] = {}
@@ -589,7 +592,7 @@ function M:setup(opts)
 			changed_files[tostring(from)] = tostring(to)
 		end
 		enqueue_task(STATE_KEY.tasks_rename_tags, changed_files)
-		local args = ya.quote(TAG_ACTION.files_transfered)
+		local args = ya.quote(TAG_ACTION.files_transferred)
 		ya.emit("plugin", {
 			self._id,
 			args,
@@ -600,7 +603,7 @@ function M:setup(opts)
 		local changed_files = {}
 		changed_files[tostring(payload.from)] = tostring(payload.to)
 		enqueue_task(STATE_KEY.tasks_rename_tags, changed_files)
-		local args = ya.quote(TAG_ACTION.files_transfered)
+		local args = ya.quote(TAG_ACTION.files_transferred)
 		ya.emit("plugin", {
 			self._id,
 			args,
@@ -613,7 +616,7 @@ function M:setup(opts)
 			changed_files[tostring(from)] = tostring(to)
 		end
 		enqueue_task(STATE_KEY.tasks_rename_tags, changed_files)
-		local args = ya.quote(TAG_ACTION.files_transfered)
+		local args = ya.quote(TAG_ACTION.files_transferred)
 		ya.emit("plugin", {
 			self._id,
 			args,
@@ -982,8 +985,8 @@ function M:entry(job)
 			if new_selected_files == nil then
 				return
 			end
-			local preseve_selected_files = selected_files()
-			set_state(STATE_KEY.preserve_selected_files, preseve_selected_files)
+			local preserve_selected_files = selected_files()
+			set_state(STATE_KEY.preserve_selected_files, preserve_selected_files)
 		else
 			if not inputted_tags then
 				local title = "Select tags"
@@ -1017,9 +1020,9 @@ function M:entry(job)
 					table.insert(new_selected_files, pathJoin(tags_tbl, fname))
 				end
 			end
-			local preseve_selected_files = selected_files()
-			set_state(STATE_KEY.preserve_selected_files, preseve_selected_files)
-			local old_selected_files = tbl_deep_clone(preseve_selected_files)
+			local preserve_selected_files = selected_files()
+			set_state(STATE_KEY.preserve_selected_files, preserve_selected_files)
+			local old_selected_files = tbl_deep_clone(preserve_selected_files)
 			if action == TAG_ACTION.replace_select then
 				-- no needs to do anything else
 			elseif action == TAG_ACTION.unite_select then
@@ -1098,7 +1101,7 @@ function M:entry(job)
 		ya.emit("update_files", { op = fs.op("done", { id = id, url = _cwd, cha = Cha({ kind = 16 }) }) })
 	elseif action == TAG_ACTION.files_deleted then
 		delete_tags()
-	elseif action == TAG_ACTION.files_transfered then
+	elseif action == TAG_ACTION.files_transferred then
 		local changes = dequeue_task(STATE_KEY.tasks_rename_tags)
 		if changes then
 			local changed_tags_db = {}
