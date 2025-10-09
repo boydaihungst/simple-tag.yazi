@@ -98,7 +98,7 @@ local TAG_ACTION = {
 
 	filter = "filter",
 	files_deleted = "files-deleted",
-	files_transfered = "files-transfered",
+	files_transferred = "files-transferred",
 }
 
 local UI_MODE_ORDERED = {
@@ -589,7 +589,7 @@ function M:setup(opts)
 			changed_files[tostring(from)] = tostring(to)
 		end
 		enqueue_task(STATE_KEY.tasks_rename_tags, changed_files)
-		local args = ya.quote(TAG_ACTION.files_transfered)
+		local args = ya.quote(TAG_ACTION.files_transferred)
 		ya.emit("plugin", {
 			self._id,
 			args,
@@ -600,7 +600,7 @@ function M:setup(opts)
 		local changed_files = {}
 		changed_files[tostring(payload.from)] = tostring(payload.to)
 		enqueue_task(STATE_KEY.tasks_rename_tags, changed_files)
-		local args = ya.quote(TAG_ACTION.files_transfered)
+		local args = ya.quote(TAG_ACTION.files_transferred)
 		ya.emit("plugin", {
 			self._id,
 			args,
@@ -613,7 +613,7 @@ function M:setup(opts)
 			changed_files[tostring(from)] = tostring(to)
 		end
 		enqueue_task(STATE_KEY.tasks_rename_tags, changed_files)
-		local args = ya.quote(TAG_ACTION.files_transfered)
+		local args = ya.quote(TAG_ACTION.files_transferred)
 		ya.emit("plugin", {
 			self._id,
 			args,
@@ -982,8 +982,8 @@ function M:entry(job)
 			if new_selected_files == nil then
 				return
 			end
-			local preseve_selected_files = selected_files()
-			set_state(STATE_KEY.preserve_selected_files, preseve_selected_files)
+			local preserve_selected_files = selected_files()
+			set_state(STATE_KEY.preserve_selected_files, preserve_selected_files)
 		else
 			if not inputted_tags then
 				local title = "Select tags"
@@ -1017,9 +1017,9 @@ function M:entry(job)
 					table.insert(new_selected_files, pathJoin(tags_tbl, fname))
 				end
 			end
-			local preseve_selected_files = selected_files()
-			set_state(STATE_KEY.preserve_selected_files, preseve_selected_files)
-			local old_selected_files = tbl_deep_clone(preseve_selected_files)
+			local preserve_selected_files = selected_files()
+			set_state(STATE_KEY.preserve_selected_files, preserve_selected_files)
+			local old_selected_files = tbl_deep_clone(preserve_selected_files)
 			if action == TAG_ACTION.replace_select then
 				-- no needs to do anything else
 			elseif action == TAG_ACTION.unite_select then
@@ -1098,7 +1098,7 @@ function M:entry(job)
 		ya.emit("update_files", { op = fs.op("done", { id = id, url = _cwd, cha = Cha({ kind = 16 }) }) })
 	elseif action == TAG_ACTION.files_deleted then
 		delete_tags()
-	elseif action == TAG_ACTION.files_transfered then
+	elseif action == TAG_ACTION.files_transferred then
 		local changes = dequeue_task(STATE_KEY.tasks_rename_tags)
 		if changes then
 			local changed_tags_db = {}

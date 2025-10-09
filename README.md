@@ -126,7 +126,7 @@ require("simple-tag"):setup({
   -- Disable tag key hints (popup in bottom right corner)
   hints_disabled = false, -- (Optional)
 
-  -- linemode order: adjusts icon/text position. Fo example, if you want icon to be on the mose left of linemode then set linemode_order larger than 1000.
+  -- linemode order: adjusts icon/text position. For example, if you want icon to be on the most left of linemode then set linemode_order larger than 1000.
   -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-plugin/preset/components/linemode.lua#L4-L5
   linemode_order = 500, -- (Optional)
 
@@ -341,7 +341,7 @@ Or you can use `keymap` to replace all other keys
 
     #  ─────────────────────── VISUAL SELECT FILES/FOLDERS BY TAGS: ───────────────────────
 
-    # Avaiable selection actions:
+    # Available selection actions:
     # replace → Replaces the current selection list with files/folders that have the selected tag.
     # unite → Combines the currently selected files/folders with those that have the selected tag.
     # intersect → Keeps only the files/folders that are present in both the current selection and the tagged items.
@@ -358,7 +358,7 @@ Or you can use `keymap` to replace all other keys
 
     # Run action on files/folders by a tag.
     # A tag hint window will show up.
-    # Simply press any tag key to do the folowing action:
+    # Simply press any tag key to do the following action:
     { on = [ "t", "s", "r" ], run = "plugin simple-tag -- replace-select", desc = "replace-select" },
     { on = [ "t", "s", "u" ], run = "plugin simple-tag -- unite-select", desc = "unite-select" },
     { on = [ "t", "s", "i" ], run = "plugin simple-tag -- intersect-select", desc = "intersect-select" },
@@ -369,7 +369,7 @@ Or you can use `keymap` to replace all other keys
 
     # Run action on files/folders by tag(s) with value from input box.
     # A tag hint window will show up.
-    # Simply input tag key(s) to do the folowing action:
+    # Simply input tag key(s) to do the following action:
     { on = [ "t", "s", "R" ], run = "plugin simple-tag -- replace-select --input", desc = "replace-select --input" },
     { on = [ "t", "s", "U" ], run = "plugin simple-tag -- unite-select --input", desc = "unite-select --input" },
     { on = [ "t", "s", "I" ], run = "plugin simple-tag -- intersect-select --input", desc = "intersect-select --input" },
@@ -387,7 +387,7 @@ Or you can use `keymap` to replace all other keys
 ### Customizing the Theme for tag hints window
 
 To modify the tag hints window appearance, edit `.../yazi/theme.toml`:
-You can also use Falvors file instead.
+You can also use Flavors file instead.
 
 ```toml
 
