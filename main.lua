@@ -3,10 +3,11 @@
 local PackageName = "simple-tag"
 local M = {}
 
-
 --          ╭─────────────────────────────────────────────────────────╮
 --          │                          ENUM                           │
 --          ╰─────────────────────────────────────────────────────────╯
+
+local TARGET_FAMILY = ya.target_family()
 
 -- stylua: ignore
 local CAND_TAG_KEYS = {
@@ -394,7 +395,8 @@ end)
 ---@return table<{[string]:string[]}
 local function read_tags_tbl(tags_tbl)
 	local save_path = get_state(STATE_KEY.save_path)
-	local tbl_saved_file = pathJoin(save_path, tags_tbl, "tags.json")
+	local tbl = TARGET_FAMILY == "windows" and tags_tbl:gsub(":", "") or tags_tbl
+	local tbl_saved_file = pathJoin(save_path, tbl, "tags.json")
 
 	local file = io.open(tbl_saved_file, "r")
 	if file == nil then
@@ -416,7 +418,8 @@ local function write_tags_db()
 
 	local save_path = get_state(STATE_KEY.save_path)
 	for tags_tbl, tags_tbl_records in pairs(changed_tags_db) do
-		local tags_tbl_save_dir = pathJoin(save_path, tags_tbl)
+		local tbl = TARGET_FAMILY == "windows" and tags_tbl:gsub(":", "") or tags_tbl
+		local tags_tbl_save_dir = pathJoin(save_path, tbl)
 		for fname, tags in pairs(tags_tbl_records) do
 			if #tags == 0 then
 				changed_tags_db[tags_tbl][fname] = nil
@@ -520,7 +523,7 @@ end
 function M:setup(opts)
 	local st = self
 	local save_path = pathJoin(
-		(ya.target_family() == "windows" and os.getenv("APPDATA") .. "\\yazi\\config\\tags")
+		(TARGET_FAMILY == "windows" and os.getenv("APPDATA") .. "\\yazi\\config\\tags")
 			or (os.getenv("HOME") .. "/.config/yazi/tags")
 	)
 	st[STATE_KEY.tasks_write_tags_db] = {}
