@@ -236,6 +236,17 @@ local function pathJoin(...)
 	return path
 end
 
+local function sanitize_filename_windows(s)
+	local pattern
+	pattern = '[<>:"/|%?%*]' -- don't include \
+
+	return (
+		s:gsub(pattern, function(c)
+			return string.format("%%%02X", c:byte()) -- encode as %XX
+		end)
+	)
+end
+
 local function ordered_pairs(tbl)
 	local keys = {} -- Store all keys in a separate table
 
@@ -395,7 +406,7 @@ end)
 ---@return table<{[string]:string[]}
 local function read_tags_tbl(tags_tbl)
 	local save_path = get_state(STATE_KEY.save_path)
-	local tbl = TARGET_FAMILY == "windows" and tags_tbl:gsub(":", "") or tags_tbl
+	local tbl = TARGET_FAMILY == "windows" and sanitize_filename_windows(tags_tbl) or tags_tbl
 	local tbl_saved_file = pathJoin(save_path, tbl, "tags.json")
 
 	local file = io.open(tbl_saved_file, "r")
@@ -418,7 +429,7 @@ local function write_tags_db()
 
 	local save_path = get_state(STATE_KEY.save_path)
 	for tags_tbl, tags_tbl_records in pairs(changed_tags_db) do
-		local tbl = TARGET_FAMILY == "windows" and tags_tbl:gsub(":", "") or tags_tbl
+		local tbl = TARGET_FAMILY == "windows" and sanitize_filename_windows(tags_tbl) or tags_tbl
 		local tags_tbl_save_dir = pathJoin(save_path, tbl)
 		for fname, tags in pairs(tags_tbl_records) do
 			if #tags == 0 then
