@@ -1,3 +1,4 @@
+
 --- @since 25.5.31
 
 local PackageName = "simple-tag"
@@ -238,7 +239,7 @@ end
 
 local function sanitize_filename_windows(s)
 	local pattern
-	pattern = '[<>:"/|%?%*]' -- don't include \
+	pattern = '[<>:"|%?%*]'
 
 	return (
 		s:gsub(pattern, function(c)
