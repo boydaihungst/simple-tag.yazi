@@ -74,7 +74,6 @@ ya pkg add boydaihungst/simple-tag
 
 - Filter Files by Tag(s) and Modes:
   In all of examples below, I didn't use fixed tag keys with `--keys`/`--key`/`--tag`/`--tags`
-
   - Mode = and (Default), match all of the selected tags:
 
     ![Recording 2025-03-29 at 20 56 47](https://github.com/user-attachments/assets/e7619681-7ab8-4e2c-b8ea-ea4aeb8c22db)
@@ -87,7 +86,6 @@ ya pkg add boydaihungst/simple-tag
   In all of examples below, I didn't use fixed tag keys with `--keys`/`--key`/`--tag`/`--tags`
 
   ![image](https://github.com/user-attachments/assets/6efabb8a-0022-4aa3-ba20-04127e3c58c1)
-
   - Replace selection:
 
     ![Recording 2025-03-29 at 23 30 56](https://github.com/user-attachments/assets/364c07a7-c1ef-4323-8e92-ccb795233fd7)
@@ -141,6 +139,7 @@ require("simple-tag"):setup({
 	  -- Set this same value with `theme.toml` > [mgr] > hovered > reversed
 	  -- Default theme use "reversed = true".
 	  -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-config/preset/theme-dark.toml#L25
+	  -- Only need to set this if you use shipped/stable yazi <= v25.5.31 or nightly yazi installed before 11/12/2025
 	  reversed = true, -- (Optional)
 
 	  -- More colors: https://yazi-rs.github.io/docs/configuration/theme#types.color

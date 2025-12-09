@@ -1,4 +1,3 @@
-
 --- @since 25.5.31
 
 local PackageName = "simple-tag"
@@ -572,6 +571,10 @@ function M:setup(opts)
 			local is_reversed_color = not st[STATE_KEY.colors]
 				or st[STATE_KEY.colors].reversed == nil
 				or st[STATE_KEY.colors].reversed == true
+			if th.indicator and th.indicator.current and type(th.indicator.current.raw) == "function" then
+				is_reversed_color = th.indicator.current:raw().reversed
+			end
+
 			local tags = st[STATE_KEY.tags_database][tags_tbl][fname] or {}
 			table.sort(tags)
 			for _, tag in ipairs(tags) do
