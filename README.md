@@ -175,7 +175,7 @@ Use one of the following methods:
 
 > [!IMPORTANT]
 >
-> For yazi nightly replace `name` with `url`
+> For yazi (>=v25.12.29) replace `name` with `url`
 
 ```toml
 [plugin]
@@ -195,7 +195,7 @@ Use one of the following methods:
     { id = "simple-tag", name = "*/", run = "simple-tag" },
   ]
 
-# For yazi nightly, name is replaced with url
+# For yazi (>=v25.12.29), name is replaced with url
   append_fetchers = [
     { id = "simple-tag", url = "*", run = "simple-tag" },
     { id = "simple-tag", url = "*/", run = "simple-tag" },
