@@ -38,7 +38,7 @@ simple-tag is a Yazi plugin that allows you to add tags to files and folders. Ea
 > Minimum supported version: Yazi v25.5.31.
 
 - [Yazi](https://github.com/sxyazi/yazi)
-- Tested on Linux
+- Tested on Linux and Windows
 
 ## Installation
 
@@ -139,7 +139,6 @@ require("simple-tag"):setup({
 	  -- Set this same value with `theme.toml` > [mgr] > hovered > reversed
 	  -- Default theme use "reversed = true".
 	  -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-config/preset/theme-dark.toml#L25
-	  -- Only need to set this if you use shipped/stable yazi <= v25.5.31 or nightly yazi installed before 11/12/2025
 	  reversed = true, -- (Optional)
 
 	  -- More colors: https://yazi-rs.github.io/docs/configuration/theme#types.color
@@ -175,27 +174,21 @@ Use one of the following methods:
 
 > [!IMPORTANT]
 >
-> For yazi (>=v25.12.29) replace `name` with `url`
+> For yazi before v25.12.29 replace `url` with `name`
 
 ```toml
 [plugin]
 
   fetchers = [
-    { id = "simple-tag", name = "*", run = "simple-tag" },
-    { id = "simple-tag", name = "*/", run = "simple-tag" },
+    { id = "simple-tag", url = "*", run = "simple-tag" },
+    { id = "simple-tag", url = "*/", run = "simple-tag" },
   ]
 # or
   prepend_fetchers = [
-    { id = "simple-tag", name = "*", run = "simple-tag" },
-    { id = "simple-tag", name = "*/", run = "simple-tag" },
+    { id = "simple-tag", url = "*", run = "simple-tag" },
+    { id = "simple-tag", url = "*/", run = "simple-tag" },
   ]
 # or
-  append_fetchers = [
-    { id = "simple-tag", name = "*", run = "simple-tag" },
-    { id = "simple-tag", name = "*/", run = "simple-tag" },
-  ]
-
-# For yazi (>=v25.12.29), name is replaced with url
   append_fetchers = [
     { id = "simple-tag", url = "*", run = "simple-tag" },
     { id = "simple-tag", url = "*/", run = "simple-tag" },
@@ -314,6 +307,8 @@ Or you can use `keymap` to replace all other keys
     # and → Filter files which contain all of selected tags (Default if mode isn't specified).
     # or → Filter files which contain at least one of selected tags.
 
+    # NOTE: Not available in vfs mode (Remote Virtual Filesystem)
+
     # Filter files/folders by tags
 
     # Filter files/folders by a tag (press any tag key)
@@ -344,8 +339,8 @@ Or you can use `keymap` to replace all other keys
     # replace → Replaces the current selection list with files/folders that have the selected tag.
     # unite → Combines the currently selected files/folders with those that have the selected tag.
     # intersect → Keeps only the files/folders that are present in both the current selection and the tagged items.
-    # subtract → Deselects files/folders that have the selected tag.
-    # exclude → Keeps only the files/folders that do not have the selected tag.
+    # subtract → Deselects files/folders that have the selected tag from the current selection.
+    # exclude → Combines the currently selected files/folders with the tagged items, then deselects any overlapping items between the current selection and the tagged items.
     # undo → Undos or redoes the last selection action.
 
     # which_key will popup to choose selection mode
