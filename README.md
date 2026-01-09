@@ -304,8 +304,12 @@ Or you can use `keymap` to replace all other keys
 
     #  ─────────────────────── FILTER FILES/FOLDERS BY TAGS: ───────────────────────
     # Available filter modes:
-    # and → Filter files which contain all of selected tags (Default if mode isn't specified).
-    # or → Filter files which contain at least one of selected tags.
+    # and → Show files that contain all selected tags. (Default if mode isn't specified).
+    # or → Show files that contain at least one of the selected tags.
+
+    # nand → ("not and") Hide files that contain all selected tags. Inverse of the "and" mode.
+    # nor → ("not or") Hide files that contain at least one of the selected tags. Inverse of the "or" mode.
+    # not → Show only files that have no tags.
 
     # NOTE: Not available in vfs mode (Remote Virtual Filesystem)
 

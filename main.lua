@@ -72,6 +72,9 @@ local UI_MODE = {
 local FILTER_MODE = {
 	["or"] = "or",
 	["and"] = "and",
+	["not"] = "not",
+	["nand"] = "nand",
+	["nor"] = "nor",
 }
 
 ---@enum SELECTION_MODE
@@ -379,6 +382,14 @@ end)
 
 local get_cwd = ya.sync(function()
 	return cx.active.current.cwd
+end)
+
+local get_cwd_filenames = ya.sync(function(_, filtered_filenames)
+	local filenames = {}
+	for i = 1, #cx.active.current.files do
+		filenames[#filenames + 1] = cx.active.current.files[i].name
+	end
+	return tbl_subtract(filenames, filtered_filenames or {})
 end)
 
 local selected_files = ya.sync(function()
@@ -1092,6 +1103,13 @@ function M:entry(job)
 		local filter_tags = {}
 		local inputted_tags = job.args.tags or job.args.tags or job.args.keys or job.args.key
 		local filter_mode = job.args.mode or FILTER_MODE["and"]
+		if FILTER_MODE[filter_mode] == nil then
+			warn(
+				"Unsupported filter mode: %s, may be you are using an old configuration of simple-tag plugin, please check the documentation.",
+				filter_mode
+			)
+			return
+		end
 		local input_mode = job.args.input
 		local cwd = get_cwd()
 		local is_virtual = cwd.scheme and cwd.scheme.is_virtual
@@ -1099,46 +1117,66 @@ function M:entry(job)
 			warn("Filtering by tags is not supported for virtual files")
 			return
 		end
-		local title = "Search tags" .. (filter_mode == FILTER_MODE["or"] and " (or)" or "") .. ":"
-		if not inputted_tags then
+		local title = "Search tags"
+			.. (filter_mode ~= FILTER_MODE["and"] and " (" .. FILTER_MODE[filter_mode] .. ")" or "")
+			.. ":"
+		if not inputted_tags and filter_mode ~= FILTER_MODE["not"] then
 			inputted_tags = show_cands_input_tags(title, input_mode)
+			if not inputted_tags then
+				return
+			end
 		end
 
-		if not inputted_tags then
-			return
-		end
-
-		for _, code in utf8.codes(inputted_tags) do
+		for _, code in utf8.codes(inputted_tags or "") do
 			local key = utf8.char(code)
 			table.insert(filter_tags, key)
 		end
 
 		local tags_tbl = tostring(cwd.is_search and cwd.path or cwd)
 		local tags_db = get_state(STATE_KEY.tags_database)
-		local tagged_filenames = tags_db[tags_tbl] or {}
+		local tagged_filenames_with_tags = tags_db[tags_tbl] or {}
 
 		local id = ya.id("ft")
 		local filter_title = "MODE=(" .. filter_mode .. ")" .. " Tags=(" .. table.concat(filter_tags, "") .. ")"
 		local _cwd = cwd:into_search(filter_title)
-		ya.emit("cd", { Url(_cwd) })
-		ya.emit("update_files", { op = fs.op("part", { id = id, url = Url(_cwd), files = {} }) })
-
 		local files = {}
-		for fname, tags in pairs(tagged_filenames) do
-			if
-				(filter_mode == FILTER_MODE["and"] and tbl_is_subset(filter_tags, tags))
-				or (filter_mode == FILTER_MODE["or"] and tbl_contains_any(tags, filter_tags))
-			then
-				-- local url = _cwd:join(fname)
-				-- TODO: WORKAROUND: cwd prefix `search://` can't be joined
-				local url = Url(tostring(_cwd.path or _cwd) .. path_separator .. tostring(fname))
-				local cha = fs.cha(url, true)
-				if cha then
-					files[#files + 1] = File({ url = url, cha = cha })
-				end
+		local function add_file(fname)
+			-- local url = _cwd:join(fname)
+			-- TODO: WORKAROUND: cwd prefix `search://` can't be joined
+			local url = Url(tostring(_cwd.path or _cwd) .. path_separator .. tostring(fname))
+			local cha = fs.cha(url, true)
+			if cha then
+				files[#files + 1] = File({ url = url, cha = cha })
 			end
 		end
 
+		if filter_mode == FILTER_MODE["and"] or filter_mode == FILTER_MODE["or"] then
+			for fname, tags in pairs(tagged_filenames_with_tags) do
+				if
+					(filter_mode == FILTER_MODE["and"] and tbl_is_subset(filter_tags, tags))
+					or (filter_mode == FILTER_MODE["or"] and tbl_contains_any(tags, filter_tags))
+				then
+					add_file(fname)
+				end
+			end
+		else
+			local tagged_filenames = {}
+			for fname, tags in pairs(tagged_filenames_with_tags) do
+				if
+					(filter_mode == FILTER_MODE["nand"] and tbl_is_subset(filter_tags, tags))
+					or (filter_mode == FILTER_MODE["nor"] and tbl_contains_any(tags, filter_tags))
+					or (filter_mode == FILTER_MODE["not"])
+				then
+					tagged_filenames[#tagged_filenames + 1] = fname
+				end
+			end
+			for _, fname in ipairs(get_cwd_filenames(tagged_filenames)) do
+				add_file(fname)
+			end
+		end
+
+		ya.emit("cd", { Url(_cwd) })
+		ya.emit("update_files", { op = fs.op("part", { id = id, url = Url(_cwd), files = {} }) })
 		ya.emit("update_files", { op = fs.op("part", { id = id, url = Url(_cwd), files = files }) })
 		ya.emit("update_files", {
 			op = fs.op("done", {
