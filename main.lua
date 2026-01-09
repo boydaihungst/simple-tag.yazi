@@ -1160,6 +1160,7 @@ function M:entry(job)
 				end
 			end
 		else
+			ya.emit("escape", { search = true })
 			local tagged_filenames = {}
 			for fname, tags in pairs(tagged_filenames_with_tags) do
 				if
