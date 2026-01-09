@@ -1183,7 +1183,7 @@ function M:entry(job)
 			op = fs.op("done", {
 				id = id,
 				url = _cwd,
-				cha = Cha({ mode = tonumber("100644", 8) }),
+				cha = fs.cha(Url(_cwd), true),
 			}),
 		})
 	elseif action == TAG_ACTION.files_deleted then
