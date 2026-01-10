@@ -139,6 +139,7 @@ require("simple-tag"):setup({
 	  -- Set this same value with `theme.toml` > [mgr] > hovered > reversed
 	  -- Default theme use "reversed = true".
 	  -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-config/preset/theme-dark.toml#L25
+	  -- Only need to set this if you use shipped/stable yazi <= v25.5.31 or nightly yazi installed before 11/12/2025
 	  reversed = true, -- (Optional)
 
 	  -- More colors: https://yazi-rs.github.io/docs/configuration/theme#types.color
