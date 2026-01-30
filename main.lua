@@ -577,7 +577,7 @@ function M:setup(opts)
 		if st[STATE_KEY.ui_mode] == UI_MODE.hidden then
 			return ""
 		end
-		local is_search = get_cwd().is_search
+		local is_search = cx.active.current.cwd.is_search
 		local tags_tbl = tostring(is_search and _self._file.url.parent.path or _self._file.url.parent)
 		local fname = _self._file.name
 		local spans = {}
