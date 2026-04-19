@@ -175,7 +175,7 @@ Use one of the following methods:
 
 > [!IMPORTANT]
 >
-> For yazi before v25.12.29 replace `url` with `name`
+> For yazi after 19-04-2025, add `group = "simple-tag"` to each fetcher below.
 
 ```toml
 [plugin]
@@ -183,6 +183,7 @@ Use one of the following methods:
   fetchers = [
     { id = "simple-tag", url = "*", run = "simple-tag" },
     { id = "simple-tag", url = "*/", run = "simple-tag" },
+    # { id = "simple-tag", url = "*/", run = "simple-tag", group = "simple-tag" },
   ]
 # or
   prepend_fetchers = [
