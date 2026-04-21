@@ -164,6 +164,7 @@ require("simple-tag"):setup({
 		["$"] = "",
 		["!"] = "",
 		["p"] = "",
+		["w"] = "This long text also works",
   },
 
 })
