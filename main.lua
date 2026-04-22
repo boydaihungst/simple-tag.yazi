@@ -1176,7 +1176,7 @@ function M:entry(job)
 			end
 		end
 
-		ya.emit("cd", { Url(_cwd) })
+		ya.emit("cd", { Url(_cwd), source = "search" })
 		ya.emit("update_files", { op = fs.op("part", { id = id, url = Url(_cwd), files = {} }) })
 		ya.emit("update_files", { op = fs.op("part", { id = id, url = Url(_cwd), files = files }) })
 		ya.emit("update_files", {
