@@ -124,9 +124,17 @@ require("simple-tag"):setup({
   -- Disable tag key hints (popup in bottom right corner)
   hints_disabled = false, -- (Optional)
 
-  -- linemode order: adjusts icon/text position. For example, if you want icon to be on the most left of linemode then set linemode_order larger than 1000.
-  -- More info: https://github.com/sxyazi/yazi/blob/077faacc9a84bb5a06c5a8185a71405b0cb3dc8a/yazi-plugin/preset/components/linemode.lua#L4-L5
-  linemode_order = 500, -- (Optional)
+  -- Display tags on the left side or right side.
+  left_side = false, -- (Optional)
+
+  -- Entity order (if left_side = true): adjusts icon/text position.
+  -- For example, if you want icon to be on the most left of line then set render_order less than 1000.
+  -- More info about the order values: https://github.com/sxyazi/yazi/blob/a2996908deddd4fc5061d18cf77f0af9f07b0e5a/yazi-plugin/preset/components/entity.lua#L4-L9
+
+  -- Linemode order (if left_side = false, by default): adjusts icon/text position.
+  -- For example, if you want icon to be on the most right of linemode then set render_order larger than 1000 and less than 2000.
+  -- More info about the order values: https://github.com/sxyazi/yazi/blob/a2996908deddd4fc5061d18cf77f0af9f07b0e5a/yazi-plugin/preset/components/linemode.lua#L4-L5
+  render_order = 500, -- (Optional)
 
   -- You can backup/restore this folder within the same OS (Linux, windows, or MacOS).
   -- But you can't restore backed up folder in the different OS because they use difference absolute path.

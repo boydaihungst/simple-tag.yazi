@@ -573,7 +573,9 @@ function M:setup(opts)
 
 	st[STATE_KEY.hints_table] = ya.dict_merge(tbl_deep_clone(st[STATE_KEY.icons]), tbl_deep_clone(st[STATE_KEY.colors]))
 	-- render tags
-	Linemode:children_add(function(_self)
+
+	local render_component = (opts and opts.left_side) and Entity or Linemode
+	render_component:children_add(function(_self)
 		if st[STATE_KEY.ui_mode] == UI_MODE.hidden then
 			return ""
 		end
