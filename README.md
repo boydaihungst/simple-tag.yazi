@@ -110,6 +110,13 @@ ya pkg add boydaihungst/simple-tag
 
     ![Recording 2025-03-29 at 23 54 55](https://github.com/user-attachments/assets/abf7ccc7-7591-4683-84f9-53e8cb9a280e)
 
+- Display on the left side:
+	<img width="545" height="154" alt="image" src="https://github.com/user-attachments/assets/ae90f44a-e6db-4918-8750-3a9be1d665ef" />
+	
+- Display on the left and hide default icon (if only has 1 tag, the condition to hide default icon is configurable)
+	<img width="546" height="173" alt="image" src="https://github.com/user-attachments/assets/17250122-7728-4a6a-b498-92ca341dd796" />
+	
+ 
 ## Configuration
 
 ### Add setup function in `yazi/init.lua`.
