@@ -576,8 +576,31 @@ function M:setup(opts)
 
 	st[STATE_KEY.hints_table] = ya.dict_merge(tbl_deep_clone(st[STATE_KEY.icons]), tbl_deep_clone(st[STATE_KEY.colors]))
 	-- render tags
+	local is_left_side = opts and opts.left_side
+	local replace_default_icon = opts and opts.replace_default_icon
+	local replace_default_icon_cond = opts and opts.replace_default_icon_cond
+	if is_left_side and replace_default_icon then
+		local orig_icon = Entity.icon
+		function Entity:icon()
+			local is_search = cx.active.current.cwd.is_search
+			local tags_tbl = tostring(is_search and self._file.url.parent.path or self._file.url.parent)
+			local fname = self._file.name
+			local tags = st[STATE_KEY.tags_database][tags_tbl] and st[STATE_KEY.tags_database][tags_tbl][fname] or {}
+			if
+				tags
+				and #tags > 0
+				and (
+					type(replace_default_icon_cond) == "function" and replace_default_icon_cond(self._file, tags)
+					or replace_default_icon_cond == nil
+				)
+			then
+				return ""
+			end
+			return orig_icon(self)
+		end
+	end
 
-	local render_component = (opts and opts.left_side) and Entity or Linemode
+	local render_component = is_left_side and Entity or Linemode
 	render_component:children_add(function(_self)
 		if st[STATE_KEY.ui_mode] == UI_MODE.hidden then
 			return ""
