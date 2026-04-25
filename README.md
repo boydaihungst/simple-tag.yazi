@@ -139,11 +139,17 @@ require("simple-tag"):setup({
   -- Linemode order (if left_side = false, by default): adjusts icon/text position.
   -- For example, if you want icon to be on the most right of linemode then set render_order larger than 1000 and less than 2000.
   -- More info about the order values: https://github.com/sxyazi/yazi/blob/a2996908deddd4fc5061d18cf77f0af9f07b0e5a/yazi-plugin/preset/components/linemode.lua#L4-L5
-  render_order = 500, -- (Optional)
+  -- Default is 1500 if tags is on the right side, otherwise 500 to make sure it won't conflict with default line padding left/right.
+  render_order = 500, -- (Optional).
 
   -- Replace default yazi file/folder icons with tag icons. Only apply if left_side = true and have at least 1 tag.
   -- Look better if it has only 1 tag. -> use function instead of boolean
   replace_default_icon = false, -- (Optional)
+
+  -- Padding for left/right side. Default will calculate automatically based on render_order and left_side.
+  -- Unless you has custom linemode/entity render function, you mostly don't need to set these values.
+  -- padding_left = " ", -- (Optional, string only)
+  -- padding_right = " ", -- (Optional, string only)
 
   -- Use replace_default_icon as a function instead
 

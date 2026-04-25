@@ -41,7 +41,6 @@ local CAND_SELECTION_ACTION = {
 	{ on = "6", desc = "Select tagged files (Undo mode)" },
 }
 local DEFAULT_TAG_ICON = "󰚋"
-local DEFAULT_RENDER_ORDER = 500
 
 local STATE_KEY = {
 	ui_mode = "ui_mode",
@@ -561,7 +560,9 @@ function M:setup(opts)
 	st[STATE_KEY.icons] = {
 		default = DEFAULT_TAG_ICON,
 	}
-	st[STATE_KEY.render_order] = DEFAULT_RENDER_ORDER
+	local is_left_side = opts and opts.left_side
+	local replace_default_icon = opts and opts.replace_default_icon
+	st[STATE_KEY.render_order] = is_left_side and 1500 or 500
 	if type(opts) == "table" then
 		st[STATE_KEY.ui_mode] = opts.ui_mode or st[STATE_KEY.ui_mode]
 		st[STATE_KEY.save_path] = pathJoin(opts.save_path or save_path)
@@ -576,8 +577,6 @@ function M:setup(opts)
 
 	st[STATE_KEY.hints_table] = ya.dict_merge(tbl_deep_clone(st[STATE_KEY.icons]), tbl_deep_clone(st[STATE_KEY.colors]))
 	-- render tags
-	local is_left_side = opts and opts.left_side
-	local replace_default_icon = opts and opts.replace_default_icon
 	if is_left_side and replace_default_icon then
 		local orig_icon = Entity.icon
 		function Entity:icon()
@@ -600,6 +599,22 @@ function M:setup(opts)
 	end
 
 	local render_component = is_left_side and Entity or Linemode
+	local padding_left = (opts and type(opts.padding_left) == "string") and opts.padding_left
+	local padding_right = (opts and type(opts.padding_right) == "string") and opts.padding_right
+	if type(padding_left) ~= "string" then
+		if is_left_side then
+			padding_left = (st[STATE_KEY.render_order] > 4000 or st[STATE_KEY.render_order] < 1000) and " " or ""
+		else
+			padding_left = st[STATE_KEY.render_order] < 2000 and " " or ""
+		end
+	end
+	if type(padding_right) ~= "string" then
+		if is_left_side then
+			padding_right = (st[STATE_KEY.render_order] < 4000 and st[STATE_KEY.render_order] >= 1000) and " " or ""
+		else
+			padding_right = st[STATE_KEY.render_order] > 2000 and " " or ""
+		end
+	end
 	render_component:children_add(function(_self)
 		if st[STATE_KEY.ui_mode] == UI_MODE.hidden then
 			return ""
@@ -631,10 +646,11 @@ function M:setup(opts)
 					style = style:fg(st[STATE_KEY.colors][tag] and st[STATE_KEY.colors][tag] or "reset")
 				end
 				if st[STATE_KEY.ui_mode] == UI_MODE.icon then
-					spans[#spans + 1] = ui.Span(" " .. (st[STATE_KEY.icons][tag] or st[STATE_KEY.icons].default))
-						:style(style)
+					spans[#spans + 1] = ui.Span(
+						padding_left .. (st[STATE_KEY.icons][tag] or st[STATE_KEY.icons].default) .. padding_right
+					):style(style)
 				elseif st[STATE_KEY.ui_mode] == UI_MODE.text then
-					spans[#spans + 1] = ui.Span(" " .. tag):style(style):bold()
+					spans[#spans + 1] = ui.Span(padding_left .. tag .. padding_right):style(style):bold()
 				end
 			end
 		end
