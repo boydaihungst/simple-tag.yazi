@@ -41,7 +41,7 @@ local CAND_SELECTION_ACTION = {
 	{ on = "6", desc = "Select tagged files (Undo mode)" },
 }
 local DEFAULT_TAG_ICON = "󰚋"
-local DEFAULT_LINEMODE_ORDER = 500
+local DEFAULT_RENDER_ORDER = 500
 
 local STATE_KEY = {
 	ui_mode = "ui_mode",
@@ -52,7 +52,7 @@ local STATE_KEY = {
 	icons = "icons",
 	hints_table = "hints_table",
 	hints_disabled = "hints_disabled",
-	linemode_order = "linemode_order",
+	render_order = "render_order",
 	tasks_write_tags_db = "tasks_write_tags_db",
 	tasks_delete_tags = "tasks_delete_tags",
 	tasks_rename_tags = "tasks_rename_tags",
@@ -561,13 +561,16 @@ function M:setup(opts)
 	st[STATE_KEY.icons] = {
 		default = DEFAULT_TAG_ICON,
 	}
-	st[STATE_KEY.linemode_order] = DEFAULT_LINEMODE_ORDER
+	st[STATE_KEY.render_order] = DEFAULT_RENDER_ORDER
 	if type(opts) == "table" then
 		st[STATE_KEY.ui_mode] = opts.ui_mode or st[STATE_KEY.ui_mode]
 		st[STATE_KEY.save_path] = pathJoin(opts.save_path or save_path)
 		st[STATE_KEY.colors] = opts.colors or st[STATE_KEY.colors]
 		st[STATE_KEY.icons] = ya.dict_merge(st[STATE_KEY.icons], opts.icons or {})
-		st[STATE_KEY.linemode_order] = tonumber(opts.linemode_order) or st[STATE_KEY.linemode_order]
+		-- linemode_order is deprecated, use render_order instead. Backward compatibility
+		st[STATE_KEY.render_order] = tonumber(opts.render_order)
+			or tonumber(opts.linemode_order)
+			or st[STATE_KEY.render_order]
 		st[STATE_KEY.hints_disabled] = opts.hints_disabled or false
 	end
 
@@ -614,7 +617,7 @@ function M:setup(opts)
 			end
 		end
 		return ui.Line(spans)
-	end, st[STATE_KEY.linemode_order])
+	end, st[STATE_KEY.render_order])
 
 	ps.sub(PUBSUB_KIND.files_move, function(payload)
 		local changed_files = {}
