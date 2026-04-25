@@ -578,7 +578,6 @@ function M:setup(opts)
 	-- render tags
 	local is_left_side = opts and opts.left_side
 	local replace_default_icon = opts and opts.replace_default_icon
-	local replace_default_icon_cond = opts and opts.replace_default_icon_cond
 	if is_left_side and replace_default_icon then
 		local orig_icon = Entity.icon
 		function Entity:icon()
@@ -590,8 +589,8 @@ function M:setup(opts)
 				tags
 				and #tags > 0
 				and (
-					type(replace_default_icon_cond) == "function" and replace_default_icon_cond(self._file, tags)
-					or replace_default_icon_cond == nil
+					type(replace_default_icon) == "function" and replace_default_icon(self._file, tags)
+					or replace_default_icon == true
 				)
 			then
 				return ""

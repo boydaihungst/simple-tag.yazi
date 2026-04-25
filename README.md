@@ -136,15 +136,16 @@ require("simple-tag"):setup({
   -- More info about the order values: https://github.com/sxyazi/yazi/blob/a2996908deddd4fc5061d18cf77f0af9f07b0e5a/yazi-plugin/preset/components/linemode.lua#L4-L5
   render_order = 500, -- (Optional)
 
-  -- Replace default yazi file/folder icons with tag icons. Only apply if left_side = true.
-  -- Look better if it has only 1 tag. -> use replace_default_icon_cond
+  -- Replace default yazi file/folder icons with tag icons. Only apply if left_side = true and have at least 1 tag.
+  -- Look better if it has only 1 tag. -> use function instead of boolean
   replace_default_icon = false, -- (Optional)
 
-  -- Replace default icon only apply if replace_default_icon = true and this option is not set, or a function return true
+  -- Use replace_default_icon as a function instead
+
 	-- tags: list/table of tag keys
 	-- file: fs::File. https://yazi-rs.github.io/docs/plugins/context#fs-file
-	replace_default_icon_cond = function(file, tags) -- (Optional)
-		return tags[1] == "*" and file.is_hovered -- Only apply to file/folder with tag key * and hovered
+	replace_default_icon = function(file, tags) -- (Optional)
+		--return tags[1] == "*" and file.is_hovered -- Only apply to file/folder with tag key * and hovered
 		return #tags == 1 -- Only apply to file/folder with only 1 tag
 	end,
 
