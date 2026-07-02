@@ -394,7 +394,9 @@ end)
 local selected_files = ya.sync(function()
 	local tab, raw_urls = cx.active, {}
 	local is_search = get_cwd().is_search
-	for _, u in pairs(tab.selected) do
+	for _, f in pairs(tab.selected) do
+		-- TODO: remove this after next yazi released
+		local u = f.url or f
 		raw_urls[#raw_urls + 1] = tostring(is_search and u.path or u)
 	end
 	return raw_urls
