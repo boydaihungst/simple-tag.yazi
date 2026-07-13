@@ -1164,7 +1164,7 @@ function M:entry(job)
 		end
 		local input_mode = job.args.input
 		local cwd = get_cwd()
-		local is_virtual = (cwd.spec and cwd.spec.is_virtual) or (cwd.scheme and cwd.scheme.is_virtual)
+		local is_virtual = (cwd.spec and cwd.spec.is_virtual) or (not cwd.spec and cwd.scheme.is_virtual)
 		if is_virtual then
 			warn("Filtering by tags is not supported for virtual files")
 			return
