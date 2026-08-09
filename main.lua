@@ -1,4 +1,4 @@
---- @since 25.5.31
+--- @since 26.5.6
 
 local PackageName = "simple-tag"
 local M = {}
