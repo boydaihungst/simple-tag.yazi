@@ -487,9 +487,19 @@ end
 --          ╰─────────────────────────────────────────────────────────╯
 
 function M:fetch(job)
+	if ya.throttle then
+		M:fetch_orig(job)
+		return require("noop"):fetch(job)
+	else
+		return M:fetch_orig(job)
+	end
+end
+
+function M:fetch_orig(job)
 	local tags_db = get_state(STATE_KEY.tags_database)
 	local _cwd = get_cwd()
 	local is_search = (_cwd.spec and _cwd.spec.is_search) or (not _cwd.spec and _cwd.is_search)
+
 	for _, file in ipairs(job.files) do
 		local tags_tbl = tostring(is_search and file.url.parent.path or file.url.parent)
 		if tags_db[tags_tbl] == nil then
@@ -664,6 +674,14 @@ function M:setup(opts)
 		end
 		return ui.Line(spans)
 	end, st[STATE_KEY.render_order])
+
+	-- NOTE: Force to fetch files/folders under preview pane
+	ps.sub("ind-sort", function(args)
+		if cx.active.preview and cx.active.preview.folder then
+			M:fetch({ files = cx.active.preview.folder.window })
+		end
+		return args
+	end)
 
 	ps.sub(PUBSUB_KIND.files_move, function(payload)
 		local changed_files = {}
