@@ -1,5 +1,14 @@
 # simple-tag
 
+> [!IMPORTANT]
+> This repository is deprecated  
+> This project is no longer actively maintained,  
+> and there will be no more updates to this repository.  
+> If you've made a fork or a newer, actively maintained version of this project,  
+> feel free to share it in the Issues page.  
+> This way, newcomers can easily find an up-to-date alternative.
+> Forks, improvements, and alternative implementations are always welcome!
+
 <!--toc:start-->
 
 - [simple-tag](#simple-tag)
@@ -35,7 +44,7 @@ simple-tag is a Yazi plugin that allows you to add tags to files and folders. Ea
 ## Requirements
 
 > [!IMPORTANT]
-> Minimum supported version: Yazi v26.5.6
+> Yazi >= v26.5.6 and <= v26.9.1
 
 - [Yazi](https://github.com/sxyazi/yazi)
 - Tested on Linux and Windows
